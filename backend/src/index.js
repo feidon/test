@@ -18,6 +18,7 @@ import fs from "fs";
 import https from "https";
 import http from "http";
 import path from "path";
+import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { execute, subscribe } from "graphql";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 
@@ -44,15 +45,34 @@ mongo.connect();
     },
   });
 
-  const app = express();
-  const pubSub = new PubSub();
-
   const configurations = {
     production: { ssl: true, port: 4001, hostname: "35.206.192.151" },
     development: { ssl: false, port: 4001, hostname: "localhost" },
   };
   const environment = process.env.NODE_ENV || "production";
   const config = configurations[environment];
+
+  const app = express();
+  const pubSub = new PubSub();
+
+  app.use("*", cors({ origin: `http://35.206.192.151:${config.port}` }));
+
+  app.use(
+    "/graphql",
+    bodyParser.json(),
+    graphqlExpress({
+      schema,
+    })
+  );
+
+  app.use(
+    "/graphiql",
+    graphiqlExpress({
+      endpointURL: "/graphql",
+      subscriptionsEndpoint: `ws://35.206.192.151:${config.port}/subscriptions`,
+    })
+  );
+
   let httpServer;
   if (config.ssl) {
     httpServer = https.createServer(
