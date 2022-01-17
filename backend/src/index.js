@@ -89,7 +89,7 @@ mongo.connect();
 
   const subscriptionServer = SubscriptionServer.create(
     { schema, execute, subscribe },
-    { server: httpServer, path: "/subscription" }
+    { server: httpServer, path: "/subscriptions" }
   );
 
   const server = new ApolloServer({
@@ -116,21 +116,23 @@ mongo.connect();
 
   server.applyMiddleware({ app });
 
-  await new Promise((resolve) =>
-    httpServer.listen({ port: config.port }, resolve)
-  );
+  httpServer.listen({ port: config.port }, () => {
+    console.log(
+      "🚀 Server ready at",
+      `http${config.ssl ? "s" : ""}://${config.hostname}:${config.port}${
+        server.graphqlPath
+      }`
+    );
 
-  console.log(
-    "🚀 Server ready at",
-    `http${config.ssl ? "s" : ""}://${config.hostname}:${config.port}${
-      server.graphqlPath
-    }`
-  );
-
-  console.log(
-    "🚀 Subscription endpoint ready at",
-    `ws${config.ssl ? "s" : ""}://${config.hostname}:${config.port}${
-      server.graphqlPath
-    }`
-  );
+    console.log(
+      "🚀 Subscription endpoint ready at",
+      `ws${config.ssl ? "s" : ""}://${config.hostname}:${config.port}${
+        server.graphqlPath
+      }`
+    );
+    new SubscriptionServer.create(
+      { schema, execute, subscribe },
+      { server: httpServer, path: "/subscriptions" }
+    );
+  });
 })();
