@@ -69,7 +69,7 @@ mongo.connect();
 
   const subscriptionServer = SubscriptionServer.create(
     { schema, execute, subscribe },
-    { server: httpServer, path: "/graphql" }
+    { server: httpServer, path: "/subscription" }
   );
 
   const server = new ApolloServer({

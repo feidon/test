@@ -14,11 +14,11 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 
 // TODO 1.2 Connect your GraphQL Server
 const httpLink = new HttpLink({
-  uri: "https://localhost:4001/graphql",
+  uri: "http://localhost:4001/graphql",
 });
 
 const wsLink = new WebSocketLink({
-  uri: `wss://localhost:4001/graphql`,
+  uri: `ws://localhost:4001/graphql`,
   options: { reconnect: true },
 });
 
