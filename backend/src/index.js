@@ -48,7 +48,7 @@ mongo.connect();
   const pubSub = new PubSub();
 
   const configurations = {
-    production: { ssl: true, port: 4001, hostname: "localhost" },
+    production: { ssl: true, port: 4001, hostname: "35.206.192.151" },
     development: { ssl: false, port: 4000, hostname: "localhost" },
   };
   const environment = process.env.NODE_ENV || "production";
