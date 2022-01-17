@@ -49,7 +49,7 @@ mongo.connect();
 
   const configurations = {
     production: { ssl: true, port: 4001, hostname: "35.206.192.151" },
-    development: { ssl: false, port: 4000, hostname: "localhost" },
+    development: { ssl: false, port: 4001, hostname: "localhost" },
   };
   const environment = process.env.NODE_ENV || "production";
   const config = configurations[environment];
